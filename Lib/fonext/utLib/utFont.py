@@ -3,25 +3,27 @@ from fontTools.ttLib import TTFont
 from extractor import extractUFO
 
 class UTFont:
-    def __init__(self, font_path):
+    def __init__(self, font_path, use_defcon=False):
         self.font_path = font_path
-        self.ttFont = TTFont(self.font_path)
+        self.use_defcon = use_defcon
+
+        self._ttFont = TTFont(self.font_path)
         self._extracted_path = None
         self._extracted_ufo = None
 
     def save(self, file):
         if self._extracted_path is None:
-            self.ttFont.save(file)
+            self._ttFont.save(file)
             return
 
         #self._extracted_ufo.save(self._extracted_path)
         ttFont = self._compile_font()
         for table in ['GPOS', 'GSUB']:
-            if table in self.ttFont:
-                ttFont[table] = self.ttFont[table]
-        self.ttFont.close()
-        self.ttFont = ttFont
-        self.ttFont.save(file)
+            if table in self._ttFont:
+                ttFont[table] = self._ttFont[table]
+        self._ttFont.close()
+        self._ttFont = ttFont
+        self._ttFont.save(file)
 
         self._extracted_path = None
         self._extracted_ufo = None
@@ -42,7 +44,7 @@ class UTFont:
         if self._extracted_path is None:
             return None
 
-        if 'CFF ' in self.ttFont:
+        if 'CFF ' in self._ttFont:
             from ufo2ft import compileOTF
             return compileOTF(self._extracted_ufo)
         else:
@@ -53,7 +55,10 @@ class UTFont:
         if self._extracted_path is not None:
             return
 
-        from ufoLib2 import Font
+        if self.use_defcon:
+            from defcon import Font
+        else:
+            from ufoLib2 import Font
 
         dirname = os.path.dirname(self.font_path)
         basename, _ = os.path.splitext(os.path.basename(self.font_path))
