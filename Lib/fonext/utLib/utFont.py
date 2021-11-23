@@ -29,10 +29,14 @@ class UTFont:
         self._extracted_ufo = None
         self._remove_garbages()
 
-    def append_glyph(self, glyph):
+    def append_glyph(self, glyph, name=None):
         self._extract()
 
-        self._extracted_ufo.addGlyph(glyph)
+        if self.use_defcon:
+            self._extracted_ufo.insertGlyph(glyph, name)
+        else:
+            # ignore name
+            self._extracted_ufo.addGlyph(glyph)
 
     def remove_glyph(self, glyph_name):
         self._extract()
