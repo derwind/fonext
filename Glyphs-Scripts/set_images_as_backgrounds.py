@@ -18,7 +18,7 @@ def main():
 
     for file in glob.glob(os.path.join(folder_path, '*.*')):
         basename, ext = os.path.splitext(os.path.basename(file))
-        if ext.lower() not in ['.png', '.jpg']:
+        if ext.lower() not in ['.png', '.jpg', '.bmp']:
             continue
         if not basename.startswith('uni'):
             continue
