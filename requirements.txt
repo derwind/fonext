@@ -1,3 +1,4 @@
 fonttools
-ufo-extractor
 ufoLib2
+ufo-extractor
+ufo2ft
