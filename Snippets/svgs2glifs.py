@@ -19,13 +19,13 @@ def get_args():
         default=None)
     parser.add_argument(
         "-w", "--width", help="The glyph advance width (default: 0)",
-        type=int, default=0)
+        type=int, default=1000)
     parser.add_argument(
         "-H", "--height", help="The glyph vertical advance (optional if "
         '"width" is defined)', type=int, default=0)
     parser.add_argument(
         "-t", "--transform", help="Transformation matrix as a list of six "
-        'float values (e.g. -t "0.1 0 0 -0.1 -50 200")', type=transform_list)
+        'float values (e.g. -t "0.1 0 0 -0.1 -50 200")', type=transform_list,default="0.1,0,0,0.1,0,0")
     parser.add_argument(
         "-f", "--format", help="UFO GLIF format version (default: 2)",
         type=int, choices=(1, 2), default=2)
