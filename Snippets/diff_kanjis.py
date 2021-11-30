@@ -19,6 +19,7 @@ def get_args():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('-o', '--output', dest='out_log', metavar='OUTPUT_LOG', type=str, default=None,
                         help='output log_file')
+    parser.add_argument('--include', metavar='CHARACTERS', type=str, default=None, help='included characters')
     parser.add_argument('--src-font', metavar='FONT', type=str, required=True, help='src font')
     parser.add_argument('--dst-font', metavar='FONT', type=str, required=True, help='dst font')
     parser.add_argument('--max-num', metavar='NUM', type=int, default=None, help='max number')
@@ -35,6 +36,10 @@ def main():
     cmap = src_ttFont.getBestCmap()
     rcmap = dst_ttFont['cmap'].buildReversed()
 
+    included_chars = {}
+    if args.include:
+        included_chars = set([ord(ch) for ch in args.include])
+
     fout = sys.stdout
     if args.out_log:
         fout = open(args.out_log, 'w')
@@ -43,11 +48,12 @@ def main():
         if gname not in rcmap:
             continue
         uni = sorted(rcmap[gname])[0]
+        if args.max_num and cnt >= args.max_num:
+            if uni not in included_chars:
+                continue
         if is_kanji(uni) and uni not in cmap:
             print(f'{uni:04X}', file=fout)
             cnt += 1
-            if args.max_num and cnt >= args.max_num:
-                break
 
     if fout != sys.stdout:
         fout.close()
