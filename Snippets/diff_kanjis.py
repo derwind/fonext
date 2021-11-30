@@ -44,7 +44,7 @@ def main():
             continue
         uni = sorted(rcmap[gname])[0]
         if is_kanji(uni) and uni not in cmap:
-            print(f'uni{uni:04X}', file=fout)
+            print(f'{uni:04X}', file=fout)
             cnt += 1
             if args.max_num and cnt >= args.max_num:
                 break
