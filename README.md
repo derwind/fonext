@@ -14,7 +14,7 @@ from fonext.utLib import UTFont
 from ufoLib2 import Font
 
 utFont = UTFont('foo.ttf')
-font = Font('bar.ufo')
+font = Font.open('bar.ufo')
 
 utFont.append_glyph(font['a-hira'])
 utFont.remove_glyph('uni611B')
