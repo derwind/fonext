@@ -25,7 +25,7 @@ def get_args():
         '"width" is defined)', type=int, default=0)
     parser.add_argument(
         "-t", "--transform", help="Transformation matrix as a list of six "
-        'float values (e.g. -t "0.1 0 0 -0.1 -50 200")', type=transform_list,default="0.1,0,0,0.1,0,0")
+        'float values (e.g. -t "0.1 0 0 -0.1 -50 200")', type=transform_list,default="0.39,0,0,0.39,0,-120")
     parser.add_argument(
         "-f", "--format", help="UFO GLIF format version (default: 2)",
         type=int, choices=(1, 2), default=2)
