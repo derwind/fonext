@@ -84,12 +84,8 @@ class UTFont:
             for g in self._extracted_ufo:
                 if g.name not in rcmap:
                     continue
-                #for uni in sorted(rcmap[g.name], reverse=True):
-                #    g.unicode = uni
-
-                # https://github.com/robotools/extractor/blob/f4ea60ea8ec3754658c2716c29f61caf0435a909/Lib/extractor/formats/opentype.py#L564
-                # XXX: g.unicodes is a set by mistake, so directly set unicodes list as ad-hoc
-                g.unicodes = sorted(rcmap[g.name])
+                for uni in sorted(rcmap[g.name], reverse=True):
+                    g.unicode = uni
 
     def _remove_garbages(self):
         if self._extracted_path is not None:
