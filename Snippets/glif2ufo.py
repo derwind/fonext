@@ -23,26 +23,40 @@ def main():
 
     glyphOrder = None
     if args.src_txt_file:
+        glyphOrder = []
         with open(args.src_txt_file) as fin:
-            glyphOrder = [f'uni{int(line.strip(), 16):04X}' for line in fin.readlines()]
+            for line in fin.readlines():
+                uni = int(line.strip(), 16)
+                # inspired by AGL spec
+                if uni <= 0xFFFF:
+                    name = f'uni{uni:04X}'
+                else:
+                    name = f'u{uni:X}'
+                glyphOrder.append(name)
 
     uni2glif = {}
     font = Font()
     for file in glob.glob(os.path.join(args.in_dir, '*.glif')):
         basename, _ = os.path.splitext(os.path.basename(file))
-        if not basename.startswith('uni'):
+        if basename.startswith('uni'):
+            uni = int(basename.replace('uni', ''), 16)
+        elif basename.startswith('u'):
+            uni = int(basename.replace('u', ''), 16)
+        else:
             continue
-        uni = int(basename.replace('uni', ''), 16)
-        uni2glif[basename] = file
+        uni2glif[uni] = file
         font.newGlyph(basename)
     if glyphOrder is not None:
         font.glyphOrder = glyphOrder
+    # glyphs file names are expected to follow the convention.
+    # c.f. https://unifiedfontobject.org/versions/ufo3/conventions/#common-user-name-to-file-name-algorithm
     font.save(args.out_ufo)
 
     with open(os.path.join(args.out_ufo, 'glyphs', 'contents.plist'), 'rb') as fin:
         contents = plistlib.load(fin)
     for uni, file in uni2glif.items():
         output_path = os.path.join(args.out_ufo, 'glyphs', contents[uni])
+        # files with a temporary names are copied to ones with names according to convention.
         shutil.copyfile(file, output_path)
 
 if __name__ == '__main__':

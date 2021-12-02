@@ -46,13 +46,21 @@ def main():
         with open(svg_file, "r", encoding="utf-8") as f:
             svg = f.read()
 
+        # until here the SVG files names are expected to be 'uniXXXX.svg'
         name = os.path.splitext(os.path.basename(svg_file))[0]
+        uni = int(name.replace('uni', ''), 16)
+        if uni > 0xFFFF:
+            # for SMP, inspired by AGL spec (https://github.com/adobe-type-tools/agl-specification)
+            name = 'u{uni:X}'
+
+        # Note that for simplicity, the glyph file names may not strictly follow the UFO naming conventions.
+        # c.f. https://unifiedfontobject.org/versions/ufo3/conventions/#common-user-name-to-file-name-algorithm
         outfile = os.path.join(options.out_dir, f'{name}.glif')
 
         glif = svg2glif(svg, name,
                         width=options.width,
                         height=options.height,
-                        unicodes=[int(name.replace('uni', ''), 16)],
+                        unicodes=[uni],
                         transform=options.transform,
                         version=options.format)
 
